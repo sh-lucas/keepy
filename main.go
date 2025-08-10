@@ -29,20 +29,22 @@ func main() {
 		}
 	}()
 
-	cmd := exec.Command(cmdName, cmdArgs...)
+	for {
+		cmd := exec.Command(cmdName, cmdArgs...)
 
-	stdout, _ := cmd.StdoutPipe()
-	stderr, _ := cmd.StderrPipe()
+		stdout, _ := cmd.StdoutPipe()
+		stderr, _ := cmd.StderrPipe()
 
-	go streamToChan(stdout, lines)
-	go streamToChan(stderr, lines)
+		go streamToChan(stdout, lines)
+		go streamToChan(stderr, lines)
 
-	if err := cmd.Start(); err != nil {
-		panic(err)
+		if err := cmd.Start(); err != nil {
+			panic(err)
+		}
+
+		cmd.Start()
+		cmd.Wait() // se morrer, reinicia
 	}
-
-	cmd.Start()
-	cmd.Wait() // se morrer, reinicia
 }
 
 func streamToChan(r io.Reader, ch chan<- []byte) {
