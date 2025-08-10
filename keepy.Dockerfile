@@ -13,7 +13,7 @@ COPY . .
 RUN CGO_ENABLED=0 go install .
 
 # Estágio 2: Imagem final, mínima
-FROM alpine:latest
+FROM debian:12-slim
 
 # Copia o binário para um diretório padrão no PATH
 COPY --from=builder /go/bin/keepy /usr/local/bin/keepy
