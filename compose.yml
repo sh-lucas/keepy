@@ -1,0 +1,9 @@
+version: '3.8'
+
+services:
+  keepy-server:
+    # Substitua 'sua-imagem' pelo nome da imagem do seu servidor.
+    image: keepy-server:latest
+    restart: unless-stopped
+    ports:
+      - "80:80"
