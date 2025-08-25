@@ -8,17 +8,17 @@ import (
 	"net/http"
 	"os"
 	"os/exec"
+	"time"
 )
 
 func main() {
 	cmdName := os.Args[1]
 	cmdArgs := os.Args[2:]
 
-	lines := make(chan []byte, 1000) // buffer grande pra não travar leitura
+	lines := make(chan []byte, 5000) // buffer grande pra não travar leitura
 
-	// Worker único pra processar linhas
+	// Worker único pra processar linhas, linha a linha, e enviar pro servidor remoto
 	go func() {
-
 		for line := range lines {
 			log.Println(string(line))
 			// Envia para servidor remoto
@@ -43,7 +43,11 @@ func main() {
 		}
 
 		cmd.Start()
-		cmd.Wait() // se morrer, reinicia
+		cmd.Wait()
+		// se morrer, reinicia
+		// depois de 5 segundos
+		time.Sleep(5 * time.Second)
+		log.Println("keepy reiniciando servidor...")
 	}
 }
 
