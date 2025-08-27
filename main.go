@@ -13,8 +13,7 @@ import (
 
 func main() {
 	cmdName := os.Args[1]
-	logPath := os.Args[2]
-	cmdArgs := os.Args[3:]
+	cmdArgs := os.Args[2:]
 
 	lines := make(chan []byte, 5000) // buffer grande pra não travar leitura
 
@@ -23,12 +22,10 @@ func main() {
 		for line := range lines {
 			log.Println(string(line))
 			// Envia para servidor remoto
-			resp, err := http.Post("http://137.131.149.96/log/"+logPath, "text/plain", bytes.NewReader(line))
+			resp, err := http.Post("http://137.131.149.96/log", "text/plain", bytes.NewReader(line))
 			if err != nil || resp.StatusCode != 200 {
 				log.Printf("Ocorreu um erro enviando a request: %v, status: %d", err, resp.StatusCode)
 			}
-			// Adiciona delay de 100ms
-			time.Sleep(100 * time.Millisecond)
 		}
 	}()
 
