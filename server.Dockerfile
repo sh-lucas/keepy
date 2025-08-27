@@ -2,10 +2,6 @@
 # Usa a imagem oficial do Go para compilar a aplicação
 FROM golang:1.23.3 AS builder
 
-# Define o timezone para São Paulo, Brasil
-ENV TZ=America/Sao_Paulo
-RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
-
 # Define o diretório de trabalho
 WORKDIR /app
 
@@ -19,10 +15,6 @@ RUN CGO_ENABLED=0 GOOS=linux go build -a -o ./main ./server/.
 # ---- Estágio Final ----
 # Usa a imagem 'scratch', que é uma imagem vazia, como base
 FROM debian:stable-slim
-
-# Define o timezone para São Paulo, Brasil
-ENV TZ=America/Sao_Paulo
-RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
 
 # Copia apenas o binário compilado do estágio de build
 COPY --from=builder ./app/main ./main
