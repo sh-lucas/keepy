@@ -21,7 +21,7 @@ var OpenFile *os.File
 
 func init() {
 	os.Mkdir("app", 0777)
-	f, err := os.OpenFile("log_local.txt", os.O_APPEND|os.O_CREATE|os.O_WRONLY, 0666)
+	f, err := os.OpenFile("/app/log_local.txt", os.O_APPEND|os.O_CREATE|os.O_WRONLY, 0666)
 	if err != nil {
 		log.Fatalf("Could not open the file wtf???")
 	}
